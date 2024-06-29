@@ -151,7 +151,7 @@ async function getSongs() {
     let div = document.createElement("div");
     div.innerHTML = res;
     let as = div.getElementsByTagName("a");
-    let songs = [];
+    let songs = []; 
     
     for (let index = 0; index < as.length; index++) {
         const element = as[index];
