@@ -114,7 +114,7 @@
     flex-wrap: wrap;
     gap: 50px;
     margin: 30px;
-    max-height: 65vh;
+    /* max-height: 65vh; */
     overflow-y: scroll;
 }
 .card{
@@ -173,14 +173,18 @@
     justify-content: center;
     align-items: center;
     gap: 1px;
-    position: absolute;
-    bottom: 12px;
-    left: 358px;
+    /* bottom: 100px; */
+    /* left: 358px; */
 
   }
   .musicbtns img{
     cursor: pointer;
     width: 30px;
+  }
+  .name_btns_tim{
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
   }
   .playcard_info{
     display: flex;
@@ -238,12 +242,18 @@
     padding: 0;
     color: rgb(0, 0, 0);
 }
+.songname_div{
+    width: 262px;
+}
 .timings{
     margin: 0;
     padding: 0;
-    left: 755px;
+    /* left: 755px; */
+    width: 262px;
     font-size: small;
     color: rgb(0, 0, 0);
+    justify-content: flex-end;
+    display: flex;
 }
 .controls{
     display: flex;
