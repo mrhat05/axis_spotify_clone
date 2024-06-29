@@ -35,7 +35,7 @@ async function musicbtns_change_playing_to_play(){
 
 async function change_play_to_playing(ind){
     let div_play=document.querySelectorAll(".playnow");
-    let playimg=div_play[ind].querySelector("img");
+    let playimg= div_play[ind].querySelector("img");
     playimg.classList.remove("fade_in")
     playimg.classList.add("fade_out")
     await delayms(50)
@@ -57,8 +57,12 @@ async function change_playing_to_play(ind){
 let currentAudio = null;
 let currplayingind=null;
 let seekbar=null;
+let seekbar2 = null;
 let seeker=null;
+let isseeking=false;
+
 function playMusic(track,ind){
+    if(!isseeking){
     let songname=document.querySelector(".songname")
     if (currentAudio && currentAudio.src === track && !currentAudio.paused) {
         currentAudio.pause();
@@ -84,11 +88,46 @@ function playMusic(track,ind){
     if (!seekbar) {
         seekbar = document.querySelector(".seekbar2");
         seeker=document.querySelector('.seeker');
+        seekbar2 = document.querySelector(".seekbar");
     }
-
+    if(!isseeking && currentAudio){
+        seeker.addEventListener('mousedown',startseeking)
+    }
+    
     currentAudio.addEventListener("timeupdate",updateseekbar)
+}
     }
 
+function seekingstop() {
+        console.log("log")
+        isseeking = false;
+        currentAudio.play() 
+        change_play_to_playing(currplayingind)
+        musicbtns_change_play_to_playing()
+        document.removeEventListener('mousemove',updateseekbar2)
+        document.removeEventListener('mouseup',seekingstop)
+    }
+    
+function updateseekbar2(e){
+    if(isseeking){
+        let rect = seekbar2.getBoundingClientRect();
+        let seekerX = e.clientX - rect.left;
+        if (e.clientX > rect.width + rect.left) seekbar.style.width = `${rect.width}px`;
+        else if (e.clientX < rect.left) seekbar.style.width = `${0}px`;
+        else seekbar.style.width = `${seekerX}px`;
+        if (e.clientX > rect.width + rect.left) seeker.style.left = `${rect.width}px`;
+        else if (e.clientX < rect.left) seeker.style.left = `${0}px`;
+        else seeker.style.left = `${seekerX}px`;
+
+        currentAudio.currentTime = ((seekerX) * (currentAudio.duration)) / rect.width;
+    }
+}
+function startseeking(){
+    isseeking=true;
+    currentAudio.pause()
+    document.addEventListener('mouseup',seekingstop)
+    document.addEventListener('mousemove',updateseekbar2)
+}
 function updateseekbar(){
         if (currentAudio && seekbar) {
             let dur = currentAudio.duration;
