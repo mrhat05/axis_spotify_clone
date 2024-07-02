@@ -106,18 +106,27 @@ function seekingstop() {
         musicbtns_change_play_to_playing()
         document.removeEventListener('mousemove',updateseekbar2)
         document.removeEventListener('mouseup',seekingstop)
+        let rect = seekbar2.getBoundingClientRect();
+        if (seeker.style.left >= rect.width + 'px') {
+            seekbar.style.width = `${rect.width}px`;
+            seeker.style.left = `${rect.width}px`;
+        }
     }
     
 function updateseekbar2(e){
     if(isseeking){
         let rect = seekbar2.getBoundingClientRect();
         let seekerX = e.clientX - rect.left;
-        if (e.clientX > rect.width + rect.left) seekbar.style.width = `${rect.width}px`;
-        else if (e.clientX < rect.left) seekbar.style.width = `${0}px`;
-        else seekbar.style.width = `${seekerX}px`;
-        if (e.clientX > rect.width + rect.left) seeker.style.left = `${rect.width}px`;
-        else if (e.clientX < rect.left) seeker.style.left = `${0}px`;
-        else seeker.style.left = `${seekerX}px`;
+        if (e.clientX > rect.width + rect.left) {
+            seekbar.style.width = `${rect.width}px`;
+            seeker.style.left = `${rect.width}px`;
+        } else if (e.clientX < rect.left) {
+            seekbar.style.width = `${0}px`;
+            seeker.style.left = `${0}px`;
+        } else {
+            seekbar.style.width = `${seekerX}px`;
+            seeker.style.left = `${seekerX}px`;
+        }
 
         currentAudio.currentTime = ((seekerX) * (currentAudio.duration)) / rect.width;
     }
@@ -132,13 +141,16 @@ function updateseekbar(){
         if (currentAudio && seekbar) {
             let dur = currentAudio.duration;
             let currtime = currentAudio.currentTime;
+            let rect=seekbar2.getBoundingClientRect();
             if(dur){
-                const new_width = (currtime / dur) * 838;
+                const new_width = (currtime / dur) * rect.width;
                 seekbar.style.width = `${new_width}px`;
                 seeker.style.left=`${new_width}px`;
                 document.querySelector(".timings").innerHTML=`${sectomin(currentAudio.currentTime)}/${sectomin(currentAudio.duration)}`
             }
-            if(currtime===dur){
+            if(currtime>=dur){
+                seekbar.style.width = `${rect.width}px`;
+                seeker.style.left = `${rect.width}px`;
                 change_playing_to_play(currplayingind)
                 musicbtns_change_playing_to_play()
             }
@@ -166,17 +178,17 @@ async function getSongs() {
     songs.forEach(song => {
         let songTitle = decodeURIComponent(song.split("-")[1])
         htmlString += `
-        <li>
-            <div class="playcard_info">
-                <img class="invert sidecardimgs" src="/msuic.svg" alt="">
-                <div class="info">
-                    <div>${songTitle.split('.mp')[0]}</div>
-                </div>
-                <div class="playnow">
-                    <img class="invert sidecardimgs" src="/play.svg" alt="">
-                </div>
-            </div>
-        </li>`
+                        <li>
+                            <div class="playcard_info">
+                                <img class="invert sidecardimgs" src="/msuic.svg" alt="">
+                                <div class="info">
+                                    <div>${songTitle.split('.mp')[0]}</div>
+                                </div>
+                            </div>
+                            <div class="playnow">
+                                <img class="invert sidecardimgs" src="/play.svg" alt="">
+                            </div>
+                        </li>`
     });
     
     uls.innerHTML = htmlString;
@@ -228,6 +240,14 @@ async function getSongs() {
             playMusic(songs[0],0)
         }
     })
+    // window.addEventListener('resize', ()=>{
+    //     const box = document.querySelector('.songs_list ul li');
+    //     const rect = box.getBoundingClientRect();
+    //     let inf=document.querySelector('.info');
+    //     let ans=(165*rect.width)/243.1666717529297;
+    //     inf.style.width=`${ans}px`;
+    // });
+
 
 }
 
