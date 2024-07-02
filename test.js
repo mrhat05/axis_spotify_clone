@@ -104,9 +104,9 @@ function playMusic(track, ind) {
     musicbtns_change_play_to_playing();
 
     if (!seekbar) {
-        seekbar = document.querySelector(".seekbar2");
+        seekbar2 = document.querySelector(".seekbar2");
         seeker = document.querySelector('.seeker');
-        seekbar2 = document.querySelector(".seekbar");
+        seekbar = document.querySelector(".seekbar");
     }
 
     currentAudio.addEventListener("timeupdate", updateseekbar);
@@ -117,11 +117,11 @@ function playMusic(track, ind) {
 
 function updateseekbar2(e) {
     if (isseeking) {
-        let rect = seekbar2.getBoundingClientRect();
+        let rect = seekbar.getBoundingClientRect();
         let seekerX = e.clientX - rect.left;
-        if (e.clientX > rect.width + rect.left) seekbar.style.width = `${rect.width}px`;
-        else if (e.clientX < rect.left) seekbar.style.width = `${0}px`;
-        else seekbar.style.width = `${seekerX}px`;
+        if (e.clientX > rect.width + rect.left) seekbar2.style.width = `${rect.width}px`;
+        else if (e.clientX < rect.left) seekbar2.style.width = `${0}px`;
+        else seekbar2.style.width = `${seekerX}px`;
         if (e.clientX > rect.width + rect.left) seeker.style.left = `${rect.width}px`;
         else if (e.clientX < rect.left) seeker.style.left = `${0}px`;
         else seeker.style.left = `${seekerX}px`;
@@ -150,7 +150,7 @@ function updateseekbar() {
     if (currentAudio && seekbar) {
         let dur = currentAudio.duration;
         let currtime = currentAudio.currentTime;
-        let rect = seekbar2.getBoundingClientRect();
+        let rect = seekbar.getBoundingClientRect();
         if (dur) {
             const new_width = (currtime / dur) * (rect.width);
             seekbar.style.width = `${new_width}px`;
