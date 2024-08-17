@@ -139,6 +139,8 @@
 }
 .card{
     width: 190px;
+    height: 305px;
+    padding: 10px;
     background-color: #222222;
     border-radius: 10px;
     position: relative;
