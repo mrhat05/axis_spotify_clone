@@ -18,7 +18,7 @@ async function musicbtns_change_play_to_playing(){
     pause_msc_btn.classList.remove("fade_in")
     pause_msc_btn.classList.add("fade_out")
     await delayms(50)
-    pause_msc_btn.src='/playing.svg'
+    pause_msc_btn.src="/SVG'S/playing.svg"
     pause_msc_btn.classList.remove("fade_out")
     pause_msc_btn.classList.add("fade_in")
 }
@@ -28,7 +28,7 @@ async function musicbtns_change_playing_to_play(){
     pause_msc_btn.classList.remove("fade_in")
     pause_msc_btn.classList.add("fade_out")
     await delayms(50)
-    pause_msc_btn.src='/play.svg'
+    pause_msc_btn.src="/SVG'S/play.svg"
     pause_msc_btn.classList.remove("fade_out")
     pause_msc_btn.classList.add("fade_in")
 }
@@ -39,7 +39,7 @@ async function change_play_to_playing(ind){
     playimg.classList.remove("fade_in")
     playimg.classList.add("fade_out")
     await delayms(50)
-    playimg.src='/playing.svg'
+    playimg.src="/SVG'S/playing.svg"
     playimg.classList.remove("fade_out")
     playimg.classList.add("fade_in")
 }
@@ -49,7 +49,7 @@ async function change_playing_to_play(ind){
     playimg.classList.remove("fade_in")
     playimg.classList.add("fade_out")
     await delayms(50)
-    playimg.src='/play.svg'
+    playimg.src="/SVG'S/play.svg"
     playimg.classList.remove("fade_out")
     playimg.classList.add("fade_in")
 }
@@ -173,27 +173,51 @@ async function getSongs() {
     }
     
     let uls = document.querySelector(".songs_list ul");
-    let htmlString = "";
-    
+    let card_cont=document.querySelector(".cardContainer");
+    let htmlString1 = "";
+    let htmlString2 = "";
     songs.forEach(song => {
         let songTitle = decodeURIComponent(song.split("-")[1])
-        htmlString += `
+        htmlString1 += `
                         <li>
                             <div class="playcard_info">
-                                <img class="invert sidecardimgs" src="/msuic.svg" alt="">
+                                <img class="invert sidecardimgs" src="/SVG'S/msuic.svg" alt="">
                                 <div class="info">
                                     <div>${songTitle.split('.mp')[0]}</div>
                                 </div>
                             </div>
                             <div class="playnow">
-                                <img class="invert sidecardimgs" src="/play.svg" alt="">
+                                <img class="invert sidecardimgs" src="/SVG'S/play.svg" alt="">
                             </div>
                         </li>`
+
+        htmlString2+=`                
+                <div class="card">
+                    <div class="play">
+                        <svg xmlns="http://www.w3.org/2000/svg" data-encore-id="icon" role="img" aria-hidden="true"
+                            viewBox="0 0 24 24" class="Svg-sc-ytk21e-0 bneLcE">
+                            <path
+                                d="m7.05 3.606 13.49 7.788a.7.7 0 0 1 0 1.212L7.05 20.394A.7.7 0 0 1 6 19.788V4.212a.7.7 0 0 1 1.05-.606z">
+                            </path>
+                        </svg>
+                    </div>
+                    <img src="https://i.scdn.co/image/ab67706f0000000281722192322800ae99c2ed06" alt="">
+                    <h2>${songTitle.split('.mp')[0]}</h2>
+                    <p>From Super hit Telugu Songs </p>
+                </div>`
     });
     
-    uls.innerHTML = htmlString;
+    uls.innerHTML = htmlString1;
+    card_cont.innerHTML=htmlString2;
+
     
     Array.from(document.querySelectorAll(".songs_list li")).forEach((e, index) => {
+        e.addEventListener("click", () => {
+            playMusic(songs[index],index);
+        });
+    })
+
+    Array.from(document.querySelectorAll(".cardContainer .card .play")).forEach((e, index) => {
         e.addEventListener("click", () => {
             playMusic(songs[index],index);
         });
