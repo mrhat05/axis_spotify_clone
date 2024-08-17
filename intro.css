@@ -136,6 +136,9 @@
     padding: 30px;
     overflow-y: auto; 
     flex: 1;
+    margin: 30px;
+    /* max-height: 65vh; */
+
 }
 .card{
     width: 190px;
