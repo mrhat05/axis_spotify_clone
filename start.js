@@ -158,51 +158,40 @@ function updateseekbar(){
 }
 
 async function getSongs() {
-    // Path to your embedded songs folder
-    const songsDirectoryPath = "/songs/";
-
-    // Define `songs` at a higher scope to make it accessible throughout the function
-    let songs = [];
-
-    try {
-        // Fetch the directory listing
-        const response = await fetch(songsDirectoryPath);
-        const res = await response.text();
-
-        // Parse the directory listing
-        const div = document.createElement("div");
-        div.innerHTML = res;
-        const links = div.getElementsByTagName("a");
-
-        // Extract MP3 file URLs dynamically
-        for (let link of links) {
-            if (link.href.endsWith(".mp3")) {
-                songs.push(link.href);
-            }
+    let response = await fetch("http://127.0.0.1:5500/songs/");
+    let res = await response.text();
+    let div = document.createElement("div");
+    div.innerHTML = res;
+    let as = div.getElementsByTagName("a");
+    let songs = []; 
+    
+    for (let index = 0; index < as.length; index++) {
+        const element = as[index];
+        if (element.href.endsWith(".mp3")) {
+            songs.push(element.href);
         }
+    }
+    
+    let uls = document.querySelector(".songs_list ul");
+    let card_cont=document.querySelector(".cardContainer");
+    let htmlString1 = "";
+    let htmlString2 = "";
+    songs.forEach(song => {
+        let songTitle = decodeURIComponent(song.split("-")[1])
+        htmlString1 += `
+                        <li>
+                            <div class="playcard_info">
+                                <img class="invert sidecardimgs" src="/SVG'S/msuic.svg" alt="">
+                                <div class="info">
+                                    <div>${songTitle.split('.mp')[0]}</div>
+                                </div>
+                            </div>
+                            <div class="playnow">
+                                <img class="invert sidecardimgs" src="/SVG'S/play.svg" alt="">
+                            </div>
+                        </li>`
 
-        let uls = document.querySelector(".songs_list ul");
-        let card_cont = document.querySelector(".cardContainer");
-        let htmlString1 = "";
-        let htmlString2 = "";
-
-        songs.forEach(song => {
-            const songTitle = decodeURIComponent(song.split("/").pop().split("-")[1]);
-
-            htmlString1 += `
-                <li>
-                    <div class="playcard_info">
-                        <img class="invert sidecardimgs" src="/SVG'S/msuic.svg" alt="">
-                        <div class="info">
-                            <div>${songTitle.split('.mp')[0]}</div>
-                        </div>
-                    </div>
-                    <div class="playnow">
-                        <img class="invert sidecardimgs" src="/SVG'S/play.svg" alt="">
-                    </div>
-                </li>`;
-
-            htmlString2 += `
+        htmlString2+=`                
                 <div class="card">
                     <div class="play">
                         <svg xmlns="http://www.w3.org/2000/svg" data-encore-id="icon" role="img" aria-hidden="true"
@@ -214,68 +203,78 @@ async function getSongs() {
                     </div>
                     <img src="https://i.scdn.co/image/ab67706f0000000281722192322800ae99c2ed06" alt="">
                     <h2>${songTitle.split('.mp')[0]}</h2>
-                    <p>From Super hit Telugu Songs</p>
-                </div>`;
-        });
+                    <p>From Super hit Telugu Songs </p>
+                </div>`
+    });
+    
+    uls.innerHTML = htmlString1;
+    card_cont.innerHTML=htmlString2;
 
-        // Insert the generated HTML into the respective containers
-        uls.innerHTML = htmlString1;
-        card_cont.innerHTML = htmlString2;
-
-    } catch (error) {
-        console.error("Error fetching songs:", error);
-    }
-
-    // Attach event listeners after the songs array is populated
+    
     Array.from(document.querySelectorAll(".songs_list li")).forEach((e, index) => {
         e.addEventListener("click", () => {
-            playMusic(songs[index], index);
+            playMusic(songs[index],index);
         });
-    });
+    })
 
     Array.from(document.querySelectorAll(".cardContainer .card .play")).forEach((e, index) => {
         e.addEventListener("click", () => {
-            playMusic(songs[index], index);
+            playMusic(songs[index],index);
         });
-    });
-
-    let pause_msc_btn = document.querySelector('.musicbtns').getElementsByTagName('img')[1];
-    pause_msc_btn.addEventListener("click", () => {
-        if (currentAudio == null) {
-            playMusic(songs[0]);
-            currplayingind = 0;
-            console.log(currplayingind);
-            change_play_to_playing(0);
-        } else if (!currentAudio.paused) {
-            currentAudio.pause();
-            change_playing_to_play(currplayingind);
-            musicbtns_change_playing_to_play();
-        } else {
-            currentAudio.play();
-            change_play_to_playing(currplayingind);
-            musicbtns_change_play_to_playing();
+    })
+    
+    let pause_msc_btn=document.querySelector('.musicbtns').getElementsByTagName('img')[1]
+    pause_msc_btn.addEventListener("click",()=>{
+        if(currentAudio==null){
+            playMusic(songs[0])
+            currplayingind=0
+            console.log(currplayingind)
+            change_play_to_playing(0)
         }
-    });
-
-    let prev_music_btn = document.querySelector('.musicbtns').getElementsByTagName('img')[0];
-    prev_music_btn.addEventListener("click", () => {
+        else if(!currentAudio.paused){
         currentAudio.pause();
-        if (currplayingind != 0) {
-            playMusic(songs[currplayingind - 1], currplayingind - 1);
-        } else {
-            playMusic(songs[songs.length - 1], songs.length - 1);
+        change_playing_to_play(currplayingind)
+        musicbtns_change_playing_to_play()
+        //hi
         }
-    });
+        else{
+            currentAudio.play(); 
+            change_play_to_playing(currplayingind)
+            musicbtns_change_play_to_playing()
+        }
+    })
 
-    let next_music_btn = document.querySelector('.musicbtns').getElementsByTagName('img')[2];
-    next_music_btn.addEventListener("click", () => {
+    let prev_music_btn=document.querySelector('.musicbtns').getElementsByTagName('img')[0]
+    prev_music_btn.addEventListener("click",()=>{
         currentAudio.pause();
-        if (currplayingind != songs.length - 1) {
-            playMusic(songs[currplayingind + 1], currplayingind + 1);
-        } else {
-            playMusic(songs[0], 0);
+        if(currplayingind!=0){
+            playMusic(songs[currplayingind-1],currplayingind-1)
         }
-    });
+        else{
+            playMusic(songs[songs.length-1],songs.length-1)
+        }
+    })
+
+    let next_music_btn=document.querySelector('.musicbtns').getElementsByTagName('img')[2]
+    next_music_btn.addEventListener("click",()=>{
+        currentAudio.pause();
+        if(currplayingind!=songs.length-1){
+            playMusic(songs[currplayingind+1],currplayingind+1)
+        }
+        else{
+            playMusic(songs[0],0)
+        }
+    })
+    // window.addEventListener('resize', ()=>{
+    //     const box = document.querySelector('.songs_list ul li');
+    //     const rect = box.getBoundingClientRect();
+    //     let inf=document.querySelector('.info');
+    //     let ans=(165*rect.width)/243.1666717529297;
+    //     inf.style.width=`${ans}px`;
+    // });
+
+
 }
+
 
 getSongs();
