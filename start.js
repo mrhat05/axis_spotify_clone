@@ -78,7 +78,7 @@ function playMusic(track,ind){
         change_playing_to_play(currplayingind)
         musicbtns_change_playing_to_play()
     }
-    songname.innerHTML=decodeURIComponent(track.split("-")[1]).split('.mp')[0]
+    songname.innerHTML=songs[ind].title
     currentAudio = new Audio(track);
     currentAudio.play();
     currplayingind=ind
@@ -156,77 +156,67 @@ function updateseekbar(){
             }
         }
 }
-
+let songs
 async function getSongs() {
-    let response = await fetch("http://127.0.0.1:5500/songs/");
-    let res = await response.text();
-    let div = document.createElement("div");
-    div.innerHTML = res;
-    let as = div.getElementsByTagName("a");
-    let songs = []; 
-    
-    for (let index = 0; index < as.length; index++) {
-        const element = as[index];
-        if (element.href.endsWith(".mp3")) {
-            songs.push(element.href);
-        }
-    }
-    
+    let response = await fetch("./public/songs/songs.json");
+    songs = await response.json();
+  
     let uls = document.querySelector(".songs_list ul");
-    let card_cont=document.querySelector(".cardContainer");
+    let card_cont = document.querySelector(".cardContainer");
     let htmlString1 = "";
     let htmlString2 = "";
+    console.log(songs)
     songs.forEach(song => {
-        let songTitle = decodeURIComponent(song.split("-")[1])
-        htmlString1 += `
-                        <li>
-                            <div class="playcard_info">
-                                <img class="invert sidecardimgs" src="/SVG'S/msuic.svg" alt="">
-                                <div class="info">
-                                    <div>${songTitle.split('.mp')[0]}</div>
-                                </div>
-                            </div>
-                            <div class="playnow">
-                                <img class="invert sidecardimgs" src="/SVG'S/play.svg" alt="">
-                            </div>
-                        </li>`
-
-        htmlString2+=`                
-                <div class="card">
-                    <div class="play">
-                        <svg xmlns="http://www.w3.org/2000/svg" data-encore-id="icon" role="img" aria-hidden="true"
-                            viewBox="0 0 24 24" class="Svg-sc-ytk21e-0 bneLcE">
-                            <path
-                                d="m7.05 3.606 13.49 7.788a.7.7 0 0 1 0 1.212L7.05 20.394A.7.7 0 0 1 6 19.788V4.212a.7.7 0 0 1 1.05-.606z">
-                            </path>
-                        </svg>
-                    </div>
-                    <img src="https://i.scdn.co/image/ab67706f0000000281722192322800ae99c2ed06" alt="">
-                    <h2>${songTitle.split('.mp')[0]}</h2>
-                    <p>From Super hit Telugu Songs </p>
-                </div>`
+      htmlString1 += `
+        <li>
+          <div class="playcard_info">
+            <img class="invert sidecardimgs" src="/SVG'S/msuic.svg" alt="">
+            <div class="info">
+              <div>${song.title}</div>
+              <div>${song.artist}</div>
+            </div>
+          </div>
+          <div class="playnow">
+            <img class="invert sidecardimgs" src="/SVG'S/play.svg" alt="">
+          </div>
+        </li>`;
+  
+      htmlString2 += `
+        <div class="card">
+          <div class="play">
+            <svg xmlns="http://www.w3.org/2000/svg" data-encore-id="icon" role="img" aria-hidden="true"
+                viewBox="0 0 24 24" class="Svg-sc-ytk21e-0 bneLcE">
+              <path
+                d="m7.05 3.606 13.49 7.788a.7.7 0 0 1 0 1.212L7.05 20.394A.7.7 0 0 1 6 19.788V4.212a.7.7 0 0 1 1.05-.606z">
+              </path>
+            </svg>
+          </div>
+          <img src="https://i.scdn.co/image/ab67706f0000000281722192322800ae99c2ed06" alt="">
+          <h2>${song.title}</h2>
+          <p>${song.artist}</p>
+        </div>`;
     });
-    
+  
     uls.innerHTML = htmlString1;
-    card_cont.innerHTML=htmlString2;
+    card_cont.innerHTML = htmlString2;
 
     
     Array.from(document.querySelectorAll(".songs_list li")).forEach((e, index) => {
         e.addEventListener("click", () => {
-            playMusic(songs[index],index);
+            playMusic(songs[index].path,index);
         });
     })
 
     Array.from(document.querySelectorAll(".cardContainer .card .play")).forEach((e, index) => {
         e.addEventListener("click", () => {
-            playMusic(songs[index],index);
+            playMusic(songs[index].path,index);
         });
     })
     
     let pause_msc_btn=document.querySelector('.musicbtns').getElementsByTagName('img')[1]
     pause_msc_btn.addEventListener("click",()=>{
         if(currentAudio==null){
-            playMusic(songs[0])
+            playMusic(songs[0].path)
             currplayingind=0
             console.log(currplayingind)
             change_play_to_playing(0)
@@ -248,10 +238,10 @@ async function getSongs() {
     prev_music_btn.addEventListener("click",()=>{
         currentAudio.pause();
         if(currplayingind!=0){
-            playMusic(songs[currplayingind-1],currplayingind-1)
+            playMusic(songs[currplayingind-1].path,currplayingind-1)
         }
         else{
-            playMusic(songs[songs.length-1],songs.length-1)
+            playMusic(songs[songs.length-1].path,songs.length-1)
         }
     })
 
@@ -259,10 +249,10 @@ async function getSongs() {
     next_music_btn.addEventListener("click",()=>{
         currentAudio.pause();
         if(currplayingind!=songs.length-1){
-            playMusic(songs[currplayingind+1],currplayingind+1)
+            playMusic(songs[currplayingind+1].path,currplayingind+1)
         }
         else{
-            playMusic(songs[0],0)
+            playMusic(songs[0].path,0)
         }
     })
     // window.addEventListener('resize', ()=>{

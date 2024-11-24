@@ -1,0 +1,57 @@
+[
+    {
+        "title": "Carousel Dreams",
+        "artist": "The Soundlings",
+        "path": "./public/songs/Carousel Dreams - The Soundlings.mp3"
+    },
+    {
+        "title": "Creme Brulee",
+        "artist": "The Soundlings",
+        "path": "./public/songs/Creme Brulee - The Soundlings.mp3"
+    },
+    {
+        "title": "Deck The Halls",
+        "artist": "The Soundlings",
+        "path": "./public/songs/Deck The Halls - The Soundlings.mp3"
+    },
+    {
+        "title": "Gemini",
+        "artist": "The Soundlings",
+        "path": "./public/songs/Gemini - The Soundlings.mp3"
+    },
+    {
+        "title": "Going Home",
+        "artist": "The Soundlings",
+        "path": "./public/songs/Going Home - The Soundlings.mp3"
+    },
+    {
+        "title": "Jingle Bells",
+        "artist": "The Soundlings",
+        "path": "./public/songs/Jingle Bells - The Soundlings.mp3"
+    },
+    {
+        "title": "Nothing Left to Decide",
+        "artist": "Ryan McCaffrey_Go By Ocean",
+        "path": "./public/songs/Nothing Left to Decide - Ryan McCaffrey_Go By Ocean.mp3"
+    },
+    {
+        "title": "Silent Night",
+        "artist": "The Soundlings",
+        "path": "./public/songs/Silent Night - The Soundlings.mp3"
+    },
+    {
+        "title": "Slack Lyfe",
+        "artist": "Ryan McCaffrey_Go By Ocean",
+        "path": "./public/songs/Slack Lyfe - Ryan McCaffrey_Go By Ocean.mp3"
+    },
+    {
+        "title": "That's the One",
+        "artist": "Ryan McCaffrey_Go By Ocean",
+        "path": "./public/songs/That's the One - Ryan McCaffrey_Go By Ocean.mp3"
+    },
+    {
+        "title": "Two Gong Fire",
+        "artist": "Ryan McCaffrey_Go By Ocean",
+        "path": "./public/songs/Two Gong Fire - Ryan McCaffrey_Go By Ocean.mp3"
+    }
+]
